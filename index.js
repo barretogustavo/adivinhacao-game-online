@@ -8,6 +8,13 @@ const players = [];
 
 // Lida com novas conexões de jogadores
 server.on('connection', (socket) => {
+  if (players.length >= 2) {
+    // Já existem 2 jogadores conectados, não permitir mais conexões
+    socket.send('Sala cheia. Não é possível conectar-se.');
+    socket.close();
+    return;
+  }
+
   console.log('Novo jogador conectado');
 
   // Adiciona o jogador à lista de jogadores
@@ -28,26 +35,23 @@ server.on('connection', (socket) => {
     player1.send('Você é o Jogador 1. Insira um número para o jogador 2 adivinhar.');
     player2.send('Você é o Jogador 2. Aguarde o jogador 1 enviar um número.');
 
-
     player1.on('message', (player1Message) => {
-      
       if (isNumeric(player1Message)) {
-        console.log('msg: ', parseInt(player1Message))
-        player2.send('Jogador 2, é sua vez! Tente adivihar o número de 1 a 10 que o jogador 1 inseriu.');
+        player2.send('Jogador 2, é sua vez! Tente adivinhar o número de 1 a 10 que o jogador 1 inseriu.');
 
         player2.on('message', (player2Message) => {
           if (isNumeric(player2Message)) {
-               if (parseInt(player1Message) === parseInt(player2Message)) {
-                 player2.send('Você acertou!');
-                 player1.send('O jogador 2 acertou! Você perdeu!');
-               } else {
-                 player2.send('Você errou. Perdeu o jogo! :(');
-                 player1.send('O jogador 2 errou. Você ganhou o jogo!');
-               }
+            if (parseInt(player1Message) === parseInt(player2Message)) {
+              player2.send('Você acertou!');
+              player1.send('O jogador 2 acertou! Você perdeu!');
             } else {
-              player2.send('Por favor, insira um número válido de 1 a 10.');
+              player2.send('Você errou. Perdeu o jogo! :(');
+              player1.send('O jogador 2 errou. Você ganhou o jogo!');
             }
-          });
+          } else {
+            player2.send('Por favor, insira um número válido de 1 a 10.');
+          }
+        });
       }
     })
   }
