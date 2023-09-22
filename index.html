@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Cliente WebSocket</title>
+</head>
+
+<body>
+  <input type="text" id="numero">
+  <button id="enviar">Enviar Número</button>
+  <div id="resultado"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const socket = new WebSocket('ws://localhost:8080'); // Substitua localhost e porta conforme necessário
+
+      socket.addEventListener('open', (event) => {
+        console.log('Conectado ao servidor WebSocket');
+      });
+
+      socket.addEventListener('message', (event) => {
+        const resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.textContent = 'Mensagem do servidor: ' + event.data;
+      });
+
+      socket.addEventListener('close', (event) => {
+        console.log('Conexão fechada');
+      });
+
+      const numeroInput = document.getElementById('numero');
+
+      document.querySelector('#enviar').addEventListener('click', () => {
+        const numero = numeroInput.value;
+        console.log('numero enviado: ', numero)
+        socket.send(numero);
+      });
+    });
+  </script>
+</body>
+
+</html>
