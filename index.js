@@ -29,10 +29,8 @@ server.on('connection', (socket) => {
     // Ambos os jogadores conectados, iniciar jogo
     const player1 = players[0];
     const player2 = players[1];
-    player1.opponent = player2;
-    player2.opponent = player1;
 
-    player1.send('Você é o Jogador 1. Insira um número para o jogador 2 adivinhar.');
+    player1.send('Você é o Jogador 1. Insira um número entre 1 e 10 para o jogador 2 adivinhar.');
     player2.send('Você é o Jogador 2. Aguarde o jogador 1 enviar um número.');
 
     player1.on('message', (player1Message) => {
@@ -52,7 +50,9 @@ server.on('connection', (socket) => {
             player2.send('Por favor, insira um número válido de 1 a 10.');
           }
         });
-      }
+      } else {
+            player1.send('Por favor, insira um número válido de 1 a 10.');
+          }
     })
   }
 });
