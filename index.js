@@ -8,6 +8,21 @@ const players = [];
 
 // Lida com novas conexões de jogadores
 server.on('connection', (socket) => {
+  socket.on('close', () => {
+    // Remove o jogador da lista de jogadores quando a conexão é fechada
+    const index = players.indexOf(socket);
+    if (index !== -1) {
+      players.splice(index, 1);
+      console.log('Jogador desconectado. Jogadores conectados: ', players.length);
+
+      // Se ainda houver um jogador na sala, avise o outro jogador que o jogo foi interrompido
+      if (players.length === 1) {
+        const remainingPlayer = players[0];
+        remainingPlayer.send('Seu oponente desconectou. O jogo foi interrompido.');
+      }
+    }
+  });
+
   if (players.length >= 2) {
     // Já existem 2 jogadores conectados, não permitir mais conexões
     socket.send('Sala cheia. Não é possível conectar-se.');
