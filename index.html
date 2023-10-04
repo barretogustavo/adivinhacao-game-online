@@ -13,7 +13,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const socket = new WebSocket('ws://https://adivinhacao-game-online.vercel.app/:8080'); // Substitua localhost e porta conforme necessário
+      const socket = new WebSocket('wss://adivinhacao-game-online.vercel.app/:8080');
 
       socket.addEventListener('open', (event) => {
         console.log('Conectado ao servidor WebSocket');
